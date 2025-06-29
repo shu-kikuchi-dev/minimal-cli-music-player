@@ -1,0 +1,7 @@
+# Python build cache
+__pycache__/
+*.py[cod]
+
+# json(home dir load data)
+json/*
+!json/.keep
