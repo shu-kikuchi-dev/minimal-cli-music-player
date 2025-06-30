@@ -1,31 +1,7 @@
 import os
-from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List
-
-
-### dedine data class
-@dataclass
-class Track:
-    path: Path
-    title: str
-
-@dataclass
-class Album:
-    name: str
-    path: Path
-    tracks: List[Track] = field(default_factory=list)
-
-@dataclass
-class Artist:
-    name: str
-    path: Path
-    albums: List[Album] = field(default_factory=list)
-
-@dataclass
-class Home:
-    home_dir: Path
-    artists: List[Artist] = field(default_factory=list)
+from music_library import load_music_library
+from utils import save_library_to_json, load_library_from_json
 
 ### ask for home dir
 def ask_for_home_dir() -> str:
@@ -61,28 +37,39 @@ def ask_for_home_dir() -> str:
                 continue
 
 ## ask for load home dir or not
-def ask_for_load_home():
-    default_json_dir = Path(r"C:\Users\shuki\Projects\hobby\Scripts\Python\simple_music_player\json")
-    
+def ask_for_load_home(json_path: Path):
     while True:
         user_input = input(
-            f"do you want to reload your home dir and make json file?(y/n)\n>>"
+            f"\ndo you want to reload your home dir and make json file?(y/n)\n>>"
             ).strip().lower()
 
         if user_input == 'y':
-            # call loading home dir function and make json
-            pass
+            return True
         elif user_input == 'n':
-            break
+            return False
         else:
-            print("invalid input. please enter again.\n")
-            continue
+            print("\ninvalid input. please enter again.\n")
 
 
 def main():
+    json_path = Path(__file__).parent.parent / "json" / "music_library.json"
+
     home_dir = ask_for_home_dir()
     print(f"\nyour home dir: {home_dir}\n")
-    ask_for_load_home()
+    reload_flag = ask_for_load_home(json_path)
+
+    if reload_flag:
+        library = load_music_library(home_dir)
+        save_library_to_json(library, json_path)
+    else:
+        if json_path.exists():
+            library = load_library_from_json(json_path)
+        else:
+            print("\nno saved json library found. loading from home dir...\n")
+            library = load_music_library(home_dir)
+            save_library_to_json(library, json_path)
+
+    print(library)
 
 if __name__=="__main__":
     main()
