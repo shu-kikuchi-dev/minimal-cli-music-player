@@ -2,8 +2,11 @@ import os
 from pathlib import Path
 from music_library import load_music_library
 from utils import save_library_to_json, load_library_from_json
+from data_classes import Home, Artist, Album, Track
+from play_music import play_album
 
-### ask for home dir
+
+# ask for home dir
 def ask_for_home_dir() -> str:
     default_home_dir = Path(r"C:\Users\shuki\Music\simple_music_player")
     home_dir_input = ""
@@ -36,7 +39,8 @@ def ask_for_home_dir() -> str:
                 print("\ninvalib input. please enter again.\n")
                 continue
 
-## ask for load home dir or not
+
+# ask for load home dir or not
 def ask_for_load_home(json_path: Path):
     while True:
         user_input = input(
@@ -51,6 +55,25 @@ def ask_for_load_home(json_path: Path):
             print("\ninvalid input. please enter again.\n")
 
 
+# choose artist
+def choose_artist(home: Home) -> Artist:
+    print("\nselect artist:\n")
+    for i, artist in enumerate(home.artists):
+        print(f"[{i}] {artist.name}")
+    idx = int(input(">>"))
+    return home.artists[idx]
+
+
+# choose album from artist
+def choose_album(artist: Artist) -> Album:
+    print("\nselect album from artist: {artist.name}\n")
+    for i, album in enumerate(artist.albums):
+        print(f"[{i}] {album.name}")
+    idx = int(input(">>"))
+    return artist.albums[idx]
+
+
+# main cli flow
 def main():
     json_path = Path(__file__).parent.parent / "json" / "music_library.json"
 
@@ -70,6 +93,11 @@ def main():
             save_library_to_json(library, json_path)
 
     print(library)
+
+    artist = choose_artist(library)
+    album = choose_album(artist)
+    play_album(album)
+
 
 if __name__=="__main__":
     main()
