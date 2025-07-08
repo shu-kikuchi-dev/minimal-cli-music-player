@@ -1,6 +1,7 @@
 from pathlib import Path
 from data_classes import Home, Artist, Album, Track
 
+
 def load_music_library(home_dir: Path) -> Home:
     home = Home(home_dir=home_dir)
     artists_root = home_dir / "Artists"

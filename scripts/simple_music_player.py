@@ -82,19 +82,19 @@ def main():
     reload_flag = ask_for_load_home(json_path)
 
     if reload_flag:
-        library = load_music_library(home_dir)
-        save_library_to_json(library, json_path)
+        home = load_music_library(home_dir)
+        save_library_to_json(home, json_path)
     else:
         if json_path.exists():
-            library = load_library_from_json(json_path)
+            home = load_library_from_json(json_path)
         else:
-            print("\nno saved json library found. loading from home dir...\n")
-            library = load_music_library(home_dir)
-            save_library_to_json(library, json_path)
+            print("\nno saved json found. loading from home dir...\n")
+            home = load_music_library(home_dir)
+            save_library_to_json(home, json_path)
 
-    print(library)
+    print(home)
 
-    artist = choose_artist(library)
+    artist = choose_artist(home)
     album = choose_album(artist)
     play_album(album)
 

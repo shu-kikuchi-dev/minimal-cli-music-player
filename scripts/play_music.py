@@ -2,6 +2,7 @@ import time
 import vlc
 from data_classes import Home, Artist, Album, Track
 
+
 def play_album(album: Album):
     print(f"\nplaying album: {album.name}\n")
     for track in album.tracks:
